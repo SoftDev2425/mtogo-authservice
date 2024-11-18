@@ -13,15 +13,66 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id       String  @id @default(uuid())
-  email    String  @unique
-  name     String?
-  password String?
+// Customer model
+model Customers {
+  id        String   @id @default(cuid())
+  firstName String   @db.VarChar(255)
+  lastName  String   @db.VarChar(255)
+  phone     String   @db.VarChar(255)
+  email     String   @unique @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  role      Role     @default(CUSTOMER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+  @@index([phone])
 }
 
-model TestTable {
-  id    String  @id @default(uuid())
-  name  String?
-  email String?
+// Restaurant model, with an address relation, and a categories relation
+model Restaurants {
+  id        String   @id @default(cuid())
+  name      String   @db.VarChar(255)
+  email     String   @unique @db.VarChar(255)
+  phone     String   @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  role      Role     @default(RESTAURANT)
+  address   Address  @relation(fields: [addressId], references: [id])
+  addressId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+  @@index([addressId], name: "address_id_index")
+}
+
+model Address {
+  id          String        @id @default(cuid())
+  street      String        @db.VarChar(255)
+  city        String        @db.VarChar(255)
+  zip         String        @db.VarChar(255)
+  x           Float         @db.DoublePrecision
+  y           Float         @db.DoublePrecision
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  Restaurants Restaurants[]
+
+  @@index([city, zip], name: "city_zip_index")
+  @@index([x, y], name: "coordinates_index")
+}
+
+// Admin model
+model Admins {
+  id        String   @id @default(cuid())
+  email     String   @unique @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  role      Role     @default(ADMIN)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  CUSTOMER
+  RESTAURANT
+  ADMIN
 }
