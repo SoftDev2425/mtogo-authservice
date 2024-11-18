@@ -13,7 +13,7 @@ import {
   logout,
 } from '../services/auth.service';
 import { registerRestaurantSchema } from '../validations/registerRestaurantSchema';
-import { ValidationError } from '../errors/CustomeErrors';
+import { ValidationError } from '../errors/CustomErrors';
 
 async function handleRegisterCustomer(req: CustomRequest, res: Response) {
   try {
