@@ -5,6 +5,12 @@ import { validateSession } from '../middlewares/sessions';
 
 const router = express.Router();
 
+router.get('/', (req: CustomRequest, res: Response) => {
+  const { email, role, userId } = req;
+  console.log(`Email: ${email}, Role: ${role}, User ID: ${userId}`);
+  res.send(`Hello from MTOGO: Auth Service!`);
+});
+
 router.get(
   '/validate',
   validateSession,
