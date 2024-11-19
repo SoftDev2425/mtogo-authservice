@@ -5,23 +5,11 @@ import { validateSession } from '../middlewares/sessions';
 
 const router = express.Router();
 
-router.get('/', (req: CustomRequest, res: Response) => {
-  const { email, role, userId } = req;
-  console.log(`Email: ${email}, Role: ${role}, User ID: ${userId}`);
-  res.send(`Hello from MTOGO: Auth Service!`);
-});
-
-router.get(
-  '/validate',
-  validateSession,
-  (req: CustomRequest, res: Response) => {
-    res.status(200).json({
-      message: 'Session is valid',
-      email: req.email,
-      validateUser: true,
-    });
-  },
+router.get('/', (_req: CustomRequest, res: Response) =>
+  res.send(`Hello from MTOGO: Auth Service!`),
 );
+
+router.get('/validate', validateSession);
 
 router.post('/login/customer', authController.handleCustomerLogin);
 router.post('/login/restaurant', authController.handleRestaurantLogin);
