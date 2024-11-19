@@ -25,6 +25,5 @@ main()
   .catch(async e => {
     console.error(e);
     await prisma.$disconnect();
-    await redisClient.disconnect();
     process.exit(1);
   });
