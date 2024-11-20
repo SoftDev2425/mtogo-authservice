@@ -1,5 +1,6 @@
 import { Express, NextFunction, Request, Response } from 'express';
 import AuthRouter from './routes/auth.routes';
+import RestarantRouter from './routes/restaurants.routes';
 import { logger } from './utils/logger';
 
 function routes(app: Express) {
@@ -12,6 +13,8 @@ function routes(app: Express) {
   );
 
   app.use('/api/auth', AuthRouter);
+
+  app.use('/api/restaurants', RestarantRouter);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   app.use((err: unknown, req: Request, res: Response, _next: NextFunction) => {
