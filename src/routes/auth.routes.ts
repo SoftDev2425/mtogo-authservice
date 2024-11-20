@@ -20,5 +20,4 @@ router.post('/register/restaurant', authController.handleRegisterRestaurant);
 
 router.post('/logout', authController.handleLogout);
 
-
 export default router;
