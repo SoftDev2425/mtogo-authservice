@@ -9,7 +9,7 @@ router.get('/', (_req: CustomRequest, res: Response) =>
   res.send(`Hello from MTOGO: Auth Service!`),
 );
 
-router.get('/validate', validateSession);
+router.post('/validate', validateSession);
 
 router.post('/login/customer', authController.handleCustomerLogin);
 router.post('/login/restaurant', authController.handleRestaurantLogin);
