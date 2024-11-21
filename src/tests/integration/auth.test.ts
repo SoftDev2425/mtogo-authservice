@@ -1,90 +1,90 @@
-// import supertest from 'supertest';
-// import {
-//   createTestAdmin,
-//   createTestCustomer,
-//   createTestRestaurant,
-//   testPassword,
-// } from '../../utils/helperMethods';
-// import { app } from '../setup/setup';
-// import { validate as uuidValidate } from 'uuid';
+import supertest from 'supertest';
+import {
+  // createTestAdmin,
+  createTestCustomer,
+  // createTestRestaurant,
+  testPassword,
+} from '../../utils/helperMethods';
+import { app } from '../setup/setup';
+import { validate as uuidValidate } from 'uuid';
 // import prisma from '../../../prisma/client';
 // import { Restaurant } from '../../models/restaurant';
 // import { getCoordinates } from '../../utils/getCoordinates';
-// jest.mock('../../utils/getCoordinates');
+jest.mock('../../utils/getCoordinates');
 
-// describe('customerLogin', () => {
-//   beforeEach(() => {
-//     jest.clearAllMocks();
-//   });
+describe('customerLogin', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
-//   it('should successfully login a customer', async () => {
-//     // Arrange
-//     const testCustomer = await createTestCustomer();
+  it('should successfully login a customer', async () => {
+    // Arrange
+    const testCustomer = await createTestCustomer();
 
-//     // Act
-//     const response = await supertest(app)
-//       .post('/api/auth/login/customer')
-//       .send({ email: testCustomer.email, password: testPassword });
+    // Act
+    const response = await supertest(app)
+      .post('/api/auth/login/customer')
+      .send({ email: testCustomer.email, password: testPassword });
 
-//     // Assert
-//     expect(response.status).toBe(200);
-//     expect(response.headers['set-cookie']).toBeDefined();
-//     expect(response.headers['set-cookie'][0]).toContain('session');
+    // Assert
+    expect(response.status).toBe(200);
+    expect(response.headers['set-cookie']).toBeDefined();
+    expect(response.headers['set-cookie'][0]).toContain('session');
 
-//     //check if valid uuid
-//     const sessionToken = response.headers['set-cookie'][0]
-//       .split(';')[0]
-//       .split('=')[1];
-//     expect(uuidValidate(sessionToken)).toBe(true);
-//     expect(response.body.message).toBe('Login successful!');
-//   });
+    //check if valid uuid
+    const sessionToken = response.headers['set-cookie'][0]
+      .split(';')[0]
+      .split('=')[1];
+    expect(uuidValidate(sessionToken)).toBe(true);
+    expect(response.body.message).toBe('Login successful!');
+  });
 
-//   it('should return 400 if email or password is missing for customer', async () => {
-//     // Act
-//     const response = await supertest(app).post('/api/auth/login/customer');
+  it('should return 400 if email or password is missing for customer', async () => {
+    // Act
+    const response = await supertest(app).post('/api/auth/login/customer');
 
-//     // Assert
-//     expect(response.status).toBe(400);
-//     expect(response.body.message).toBe('Email and password are required');
-//   });
+    // Assert
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe('Email and password are required');
+  });
 
-//   it('should return 401 if credentials are invalid for customer', async () => {
-//     // Act
-//     const response = await supertest(app)
-//       .post('/api/auth/login/customer')
-//       .send({ email: 'invalid@email.com', password: 'invalidPassword' });
+  it('should return 401 if credentials are invalid for customer', async () => {
+    // Act
+    const response = await supertest(app)
+      .post('/api/auth/login/customer')
+      .send({ email: 'invalid@email.com', password: 'invalidPassword' });
 
-//     // Assert
-//     expect(response.status).toBe(401);
-//     expect(response.body.message).toBe('Invalid credentials');
-//   });
+    // Assert
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe('Invalid credentials');
+  });
 
-//   it('should return 400 if email is invalid for customer', async () => {
-//     // Act
-//     const response = await supertest(app)
-//       .post('/api/auth/login/customer')
-//       .send({ email: 'invalidEmail', password: 'password' });
+  it('should return 400 if email is invalid for customer', async () => {
+    // Act
+    const response = await supertest(app)
+      .post('/api/auth/login/customer')
+      .send({ email: 'invalidEmail', password: 'password' });
 
-//     // Assert
-//     expect(response.status).toBe(400);
-//     expect(response.body.errors[0].field).toBe('email');
-//     expect(response.body.errors[0].message).toBe(
-//       'Please provide a valid email address.',
-//     );
-//   });
+    // Assert
+    expect(response.status).toBe(400);
+    expect(response.body.errors[0].field).toBe('email');
+    expect(response.body.errors[0].message).toBe(
+      'Please provide a valid email address.',
+    );
+  });
 
-//   it('should return 401 if password is invalid for customer', async () => {
-//     // Act
-//     const testCustomer = await createTestCustomer();
-//     const response = await supertest(app)
-//       .post('/api/auth/login/customer')
-//       .send({ email: testCustomer.email, password: 'invalidPassword' });
+  it('should return 401 if password is invalid for customer', async () => {
+    // Act
+    const testCustomer = await createTestCustomer();
+    const response = await supertest(app)
+      .post('/api/auth/login/customer')
+      .send({ email: testCustomer.email, password: 'invalidPassword' });
 
-//     // Assert
-//     expect(response.status).toBe(401);
-//     expect(response.body.message).toBe('Invalid credentials');
-//   });
-// });
+    // Assert
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe('Invalid credentials');
+  });
+});
 
 // describe('restaurantLogin', () => {
 //   beforeEach(() => {
