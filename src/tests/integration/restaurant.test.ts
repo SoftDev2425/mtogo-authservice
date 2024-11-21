@@ -1,6 +1,7 @@
 import supertest from 'supertest';
 import { app } from '../setup/setup';
 import { createTestRestaurant } from '../../utils/helperMethods';
+import * as restaurantService from '../../services/restaurant.service';
 
 describe('Get Restaurant Data', () => {
   beforeEach(() => {
@@ -48,10 +49,12 @@ describe('Get Restaurant Data', () => {
   it('should return 500 when a server error occurs', async () => {
     // Arrange
     jest
-      .spyOn(require('../../services/restaurant.service'), 'getRestaurantData')
+      .spyOn(restaurantService, 'getRestaurantData')
       .mockRejectedValue(new Error('Database error'));
 
-    const restaurantId = 'restaurant-id';
+    const testRestaurant = await createTestRestaurant();
+
+    const restaurantId = testRestaurant.id;
 
     // Act
     const response = await supertest(app).get(
