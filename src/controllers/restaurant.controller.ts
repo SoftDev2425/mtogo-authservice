@@ -6,6 +6,11 @@ async function handleGetRestaurantData(req: CustomRequest, res: Response) {
   try {
     const { restaurantId } = req.params;
     const restaurant = await getRestaurantData(restaurantId);
+
+    if (!restaurant) {
+      return res.status(404).json({ message: 'Restaurant not found' });
+    }
+
     return res.status(200).json({
       restaurant,
     });
