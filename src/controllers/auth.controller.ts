@@ -271,7 +271,6 @@ async function handleLogout(req: CustomRequest, res: Response) {
       return sendErrorResponse(res, 400, 'Session token is missing');
     }
 
-    // const userRole = await validateSessionToken(sessionToken);
     await logout(sessionToken);
 
     res.clearCookie('session');

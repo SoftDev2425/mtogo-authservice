@@ -28,4 +28,4 @@ global.beforeEach(async () => {
 global.afterAll(async () => {
   await prisma.$disconnect();
   await redisClient.quit();
-});
+}, 10000);
