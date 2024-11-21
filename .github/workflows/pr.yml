@@ -8,6 +8,13 @@ on:
 jobs:
   build_and_test:
     runs-on: ubuntu-latest
+
+    services: 
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+          
     steps:
       # Step 1 - Checkout code
       - uses: actions/checkout@v3
