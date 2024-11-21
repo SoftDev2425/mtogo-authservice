@@ -7,9 +7,9 @@ export let app: any;
 
 global.beforeAll(async () => {
   app = createServer();
-  if (!redisClient.isOpen) {
-    await redisClient.connect();
-  }
+  
+  await redisClient.connect();
+  
   redisClient.on('error', () =>
     console.log('Connection to redis server failed'),
   );
