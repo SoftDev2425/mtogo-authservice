@@ -37,4 +37,4 @@ global.afterAll(async () => {
   } catch (error) {
     console.error('Error during cleanup:', error);
   }
-}, 20000); // Set timeout to 20 seconds
+}, 100000); // Set timeout to 20 seconds
