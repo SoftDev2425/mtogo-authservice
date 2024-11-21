@@ -26,6 +26,11 @@ global.beforeEach(async () => {
 });
 
 global.afterAll(async () => {
+  console.log('Disconnecting from Prisma...');
   await prisma.$disconnect();
+  console.log('Prisma disconnected.');
+
+  console.log('Quitting Redis client...');
   await redisClient.quit();
+  console.log('Redis client quit.');
 }, 10000);
