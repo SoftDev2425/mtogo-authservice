@@ -32,9 +32,9 @@ global.afterAll(async () => {
     console.log('Prisma disconnected.');
 
     console.log('Quitting Redis client...');
-    await redisClient.quit();
-    console.log('Redis client quit.');
+    await redisClient.disconnect();
+    console.log('Redis client disconnect.');
   } catch (error) {
     console.error('Error during cleanup:', error);
   }
-}, 100000); // Set timeout to 20 seconds
+});
