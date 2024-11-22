@@ -43,6 +43,14 @@ jobs:
       - name: Run Linter
         run: npm run lint
 
+      - name: Wait for Redis
+        run: |
+          until nc -z -v -w30 redis 6379; do
+            echo "Waiting for Redis to be ready..."
+            sleep 5
+          done
+          echo "Redis is ready!"
+
       # Step 5 - Running tests
       - name: Run Tests
         run: npm test
