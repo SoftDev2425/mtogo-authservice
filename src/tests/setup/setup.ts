@@ -8,11 +8,11 @@ export let app: any;
 global.beforeAll(async () => {
   app = createServer();
 
-  const redisHost = process.env.REDIS_HOST || 'localhost';  // Will be 'redis' in GitHub Actions
+  const redisHost = process.env.REDIS_HOST || 'localhost'; // Will be 'redis' in GitHub Actions
   const redisPort = process.env.REDIS_PORT || '6379';
   console.log(redisHost);
   console.log(redisPort);
-  
+
   await redisClient.connect();
 
   redisClient.on('error', () =>
