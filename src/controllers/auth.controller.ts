@@ -263,19 +263,6 @@ function sendErrorResponse(res: Response, status: number, message: string) {
   return res.status(status).json({ message });
 }
 
-// Helper function used to validate session tokens.
-// async function validateSessionToken(sessionToken: string): Promise<string> {
-//   const sessionKeyPattern = `*-SessionToken-${sessionToken}`;
-//   const matchingKeys = await redisClient.keys(sessionKeyPattern);
-
-//   if (matchingKeys.length === 0) {
-//     throw new Error('Invalid or expired session token');
-//   }
-
-//   const sessionKey = matchingKeys[0];
-//   return sessionKey.split('-')[0]; // Extract the user role
-// }
-
 async function handleLogout(req: CustomRequest, res: Response) {
   try {
     const sessionToken = req.cookies?.session;
@@ -284,7 +271,6 @@ async function handleLogout(req: CustomRequest, res: Response) {
       return sendErrorResponse(res, 400, 'Session token is missing');
     }
 
-    // const userRole = await validateSessionToken(sessionToken);
     await logout(sessionToken);
 
     res.clearCookie('session');
