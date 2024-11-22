@@ -8,7 +8,8 @@ on:
 env:
   NODE_ENV: test
   DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
-  REDIS_URL: redis://redis:6379
+  REDIS_HOST: redis 
+  REDIS_PORT: 6379
 
 jobs:
   build_and_test:
@@ -22,11 +23,13 @@ jobs:
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: postgres
         ports:
-          - 5432
-      redis:
-        image: redis:latest
+          - 5432:5432
+
+      redis: 
+        image: redis:alpine
         ports:
-          - 6379
+          - 6379:6379
+        options: --health-cmd "redis-server --test-memory 1000" --health-timeout 10s --health-retries 5
 
     steps:
       # Step 1 - Checkout code
@@ -43,16 +46,10 @@ jobs:
       - name: Run Linter
         run: npm run lint
 
-      # Step 5 - View Redis logs (optional for debugging)
-      - name: View Redis Logs (optional)
-        run: |
-          docker ps -a # list all containers to check their status
-          docker logs redis # view logs from the Redis container
-
-      # Step 6 - Running tests
+      # Step 5 - Running tests
       - name: Run Tests
         run: npm test
 
-      # Step 7 - Running build (only if everything else succeeds)
+      # Step 6 - Running build (only if everything else succeeds)
       - name: Run Build
         run: npm run build
