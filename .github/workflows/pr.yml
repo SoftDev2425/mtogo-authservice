@@ -50,14 +50,14 @@ jobs:
       # Step 5 - Wait for Redis to be healthy
       - name: Wait for Redis to be ready
         run: |
-          echo "Waiting for Redis to be healthy..."
-          until docker inspect --format '{{.State.Health.Status}}' redis | grep -q 'healthy'; do
-            echo "Waiting for Redis to be healthy..."
+          echo "Waiting for Redis to be ready..."
+          until nc -z -v -w30 redis 6379; do
+            echo "Waiting for Redis to be ready..."
             sleep 5
           done
           echo "Redis is ready!"  
       
-          # Step 6 - View Redis logs (optional for debugging)
+      # Step 6 - View Redis logs (optional for debugging)
       - name: View Redis Logs
         run: docker logs redis
 
