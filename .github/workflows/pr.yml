@@ -24,11 +24,6 @@ jobs:
           - 5432
       redis:
         image: redis:latest
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
         ports:
           - 6379
 
@@ -48,8 +43,10 @@ jobs:
         run: npm run lint
 
       # Step 5 - View Redis logs (optional for debugging)
-      - name: View Redis Logs
-        run: docker logs redis
+      - name: View Redis Logs (optional)
+        run: |
+          docker ps -a # list all containers to check their status
+          docker logs redis # view logs from the Redis container
 
       # Step 6 - Running tests
       - name: Run Tests
