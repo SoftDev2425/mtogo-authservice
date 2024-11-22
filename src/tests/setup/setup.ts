@@ -23,7 +23,6 @@ global.beforeEach(async () => {
     prisma.address.deleteMany(),
     prisma.admins.deleteMany(),
   ]);
-  await redisClient.flushAll();
 });
 
 global.afterAll(async () => {
@@ -32,10 +31,6 @@ global.afterAll(async () => {
   console.log('Prisma disconnected.');
 
   console.log('Quitting Redis client...');
-  try {
-    await redisClient.quit();
-    console.log('Redis client quit.');
-  } catch (error) {
-    console.error('Error quitting Redis client:', error);
-  }
+  await redisClient.quit();
+  console.log('Redis client quit.');
 });
