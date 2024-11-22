@@ -47,10 +47,24 @@ jobs:
       - name: Run Linter
         run: npm run lint
 
-      # Step 5 - Running tests
+      # Step 5 - Wait for Redis to be healthy
+      - name: Wait for Redis to be ready
+        run: |
+          echo "Waiting for Redis to be healthy..."
+          until docker inspect --format '{{.State.Health.Status}}' redis | grep -q 'healthy'; do
+            echo "Waiting for Redis to be healthy..."
+            sleep 5
+          done
+          echo "Redis is ready!"  
+      
+          # Step 6 - View Redis logs (optional for debugging)
+      - name: View Redis Logs
+        run: docker logs redis
+
+      # Step 7 - Running tests
       - name: Run Tests
         run: npm test
 
-      # Step 6: Running build (only if everything else succeeds)
+      # Step 8 - Running build (only if everything else succeeds)
       - name: Run Build
         run: npm run build
