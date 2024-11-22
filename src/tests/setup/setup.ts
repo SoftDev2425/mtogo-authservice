@@ -27,7 +27,7 @@ global.beforeEach(async () => {
     prisma.customers.deleteMany(),
     prisma.restaurants.deleteMany(),
     prisma.address.deleteMany(),
-    prisma.admins.deleteMany()
+    prisma.admins.deleteMany(),
   ]);
 });
 
