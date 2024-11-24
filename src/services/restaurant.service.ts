@@ -1,6 +1,6 @@
 import prisma from '../../prisma/client';
 
-export async function getRestaurantData(restaurantId: string) {
+async function getRestaurantData(restaurantId: string) {
   return await prisma.restaurants.findUnique({
     where: {
       id: restaurantId,
@@ -14,3 +14,21 @@ export async function getRestaurantData(restaurantId: string) {
     },
   });
 }
+
+async function getRestaurants(zip: string) {
+  return await prisma.restaurants.findMany({
+    where: {
+      address: {
+        zip: zip, 
+      },
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      phone: true,
+    },
+  });
+}
+
+export {getRestaurantData, getRestaurants}
