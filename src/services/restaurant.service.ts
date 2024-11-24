@@ -19,7 +19,7 @@ async function getRestaurants(zip: string) {
   return await prisma.restaurants.findMany({
     where: {
       address: {
-        zip: zip, 
+        zip: zip,
       },
     },
     select: {
@@ -31,4 +31,4 @@ async function getRestaurants(zip: string) {
   });
 }
 
-export {getRestaurantData, getRestaurants}
+export { getRestaurantData, getRestaurants };
