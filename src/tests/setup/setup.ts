@@ -8,7 +8,6 @@ export let app: any;
 global.beforeAll(async () => {
   app = createServer();
 
-
   if (!redisClient.isOpen) {
     await redisClient.connect();
   }
