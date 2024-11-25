@@ -1,6 +1,9 @@
 import { Response } from 'express';
 import { CustomRequest } from '../types/CustomRequest';
-import { getRestaurantData } from '../services/restaurant.service';
+import {
+  getRestaurantData,
+  getRestaurants,
+} from '../services/restaurant.service';
 
 async function handleGetRestaurantData(req: CustomRequest, res: Response) {
   try {
@@ -20,4 +23,16 @@ async function handleGetRestaurantData(req: CustomRequest, res: Response) {
   }
 }
 
-export default { handleGetRestaurantData };
+async function handleGetRestaurants(req: CustomRequest, res: Response) {
+  try {
+    const { zip } = req.params;
+    const restaurants = await getRestaurants(zip);
+
+    return res.status(200).json({ restaurants });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+}
+
+export default { handleGetRestaurantData, handleGetRestaurants };
