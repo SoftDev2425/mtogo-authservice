@@ -27,6 +27,7 @@ async function getRestaurants(zip: string) {
       name: true,
       email: true,
       phone: true,
+      address: true,
     },
   });
 }
