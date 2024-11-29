@@ -2,6 +2,7 @@ import { Express, NextFunction, Request, Response } from 'express';
 import AuthRouter from './routes/auth.routes';
 import RestarantRouter from './routes/restaurants.routes';
 import { logger } from './utils/logger';
+import { handleGetCustomerAndRestaurantData } from './controllers/customerAndRestaurant.controller';
 
 function routes(app: Express) {
   app.get('/', (_req: Request, res: Response) =>
@@ -15,6 +16,30 @@ function routes(app: Express) {
   app.use('/api/auth', AuthRouter);
 
   app.use('/api/restaurants', RestarantRouter);
+
+  app.get(
+    '/api/customer-and-restaurant',
+    async (req: Request, res: Response) => {
+      try {
+        const { customerId, restaurantId } = req.query;
+
+        const data = await handleGetCustomerAndRestaurantData(
+          customerId as string,
+          restaurantId as string,
+        );
+
+        res.status(200).json(data);
+      } catch (error) {
+        if (error instanceof Error) {
+          res.status(500).json({ error: error.message });
+        }
+
+        res.status(500).json({
+          error: 'An unknown error occurred in customer-and-restaurant route',
+        });
+      }
+    },
+  );
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   app.use((err: unknown, req: Request, res: Response, _next: NextFunction) => {
