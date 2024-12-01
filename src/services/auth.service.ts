@@ -50,6 +50,8 @@ async function registerRestaurant(
     city: string;
     zip: string;
   },
+  regNo: string,
+  accountNo: string,
 ) {
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -72,6 +74,8 @@ async function registerRestaurant(
             y: lat,
           },
         },
+        regNo,
+        accountNo,
       },
       select: {
         id: true,

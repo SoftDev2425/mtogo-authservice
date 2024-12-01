@@ -77,9 +77,18 @@ async function handleRegisterCustomer(req: CustomRequest, res: Response) {
 
 async function handleRegisterRestaurant(req: CustomRequest, res: Response) {
   try {
-    const { name, email, phone, password, address } = req.body;
+    const { name, email, phone, password, address, regNo, accountNo } =
+      req.body;
 
-    const requiredFields = ['name', 'email', 'phone', 'password', 'address'];
+    const requiredFields = [
+      'name',
+      'email',
+      'phone',
+      'password',
+      'address',
+      'regNo',
+      'accountNo',
+    ];
     const errors = validateRequiredFields(req.body, requiredFields);
 
     if (errors.length > 0) {
@@ -92,6 +101,8 @@ async function handleRegisterRestaurant(req: CustomRequest, res: Response) {
       phone,
       password,
       address,
+      regNo,
+      accountNo,
     });
 
     const restaurant = await registerRestaurant(
@@ -100,6 +111,8 @@ async function handleRegisterRestaurant(req: CustomRequest, res: Response) {
       phone,
       password,
       address,
+      regNo,
+      accountNo,
     );
 
     return res.status(200).json({

@@ -39,6 +39,8 @@ model Restaurants {
   role      Role     @default(RESTAURANT)
   address   Address  @relation(fields: [addressId], references: [id])
   addressId String
+  regNo     String   @db.VarChar(255)
+  accountNo String   @db.VarChar(255)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

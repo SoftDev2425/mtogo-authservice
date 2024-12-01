@@ -11,6 +11,8 @@ async function getRestaurantData(restaurantId: string) {
       email: true,
       phone: true,
       address: true,
+      regNo: true,
+      accountNo: true,
     },
   });
 }
@@ -28,6 +30,8 @@ async function getRestaurants(zip: string) {
       email: true,
       phone: true,
       address: true,
+      regNo: true,
+      accountNo: true,
     },
   });
 }

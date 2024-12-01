@@ -20,6 +20,8 @@ const registerRestaurantSchema = z.object({
       .min(4, 'Please enter a valid danish zip code')
       .max(4, 'Please enter a valid danish zip code'),
   }),
+  regNo: z.string().min(4, 'Invalid registration number'),
+  accountNo: z.string().min(8, 'Invalid account number'),
 });
 
 export { registerRestaurantSchema };
