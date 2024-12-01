@@ -36,6 +36,8 @@ export async function createTestRestaurant() {
         name: 'Test Restaurant',
         email: 'test.restaurant@example.com',
         phone: '9876543210',
+        regNo: '1234',
+        accountNo: '12345678',
         password: await hashPassword(),
         addressId: address.id,
       },
