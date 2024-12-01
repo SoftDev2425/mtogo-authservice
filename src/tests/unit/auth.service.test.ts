@@ -126,6 +126,8 @@ describe('registerRestaurant', () => {
       x: mockCoordinates.lon,
       y: mockCoordinates.lat,
     },
+    regNo: '1234',
+    accountNo: '12345678',
   };
 
   bcrypt.hash = jest.fn().mockResolvedValue(mockRestaurant.password);
@@ -140,6 +142,8 @@ describe('registerRestaurant', () => {
       mockRestaurant.phone,
       'notHashedPassword',
       mockRestaurant.address,
+      mockRestaurant.regNo,
+      mockRestaurant.accountNo,
     );
 
     // Assert
@@ -161,6 +165,8 @@ describe('registerRestaurant', () => {
             y: mockRestaurant.address.y,
           },
         },
+        regNo: mockRestaurant.regNo,
+        accountNo: mockRestaurant.accountNo,
       },
       select: {
         id: true,
@@ -206,6 +212,8 @@ describe('registerRestaurant', () => {
         mockRestaurant.phone,
         'notHashedPassword',
         mockRestaurant.address,
+        mockRestaurant.regNo,
+        mockRestaurant.accountNo,
       ),
     ).rejects.toThrow('A restaurant with this email already exists');
   });
@@ -224,6 +232,8 @@ describe('registerRestaurant', () => {
         mockRestaurant.phone,
         'notHashedPassword',
         mockRestaurant.address,
+        mockRestaurant.regNo,
+        mockRestaurant.accountNo,
       ),
     ).rejects.toThrow(new Error('Something went wrong'));
 

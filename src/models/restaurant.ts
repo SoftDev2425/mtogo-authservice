@@ -4,6 +4,8 @@ export interface Restaurant {
   phone: string;
   password: string;
   address: Address;
+  regNo: string;
+  accountNo: string;
 }
 
 interface Address {

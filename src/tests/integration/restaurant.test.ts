@@ -30,6 +30,8 @@ describe('Get Restaurant Data', () => {
         address: expect.objectContaining({
           id: testRestaurant.addressId,
         }),
+        regNo: testRestaurant.regNo,
+        accountNo: testRestaurant.accountNo,
       },
     });
   });

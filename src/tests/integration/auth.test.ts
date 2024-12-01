@@ -256,6 +256,8 @@ describe('registerRestaurant', () => {
         x: mockCoordinates.lon,
         y: mockCoordinates.lat,
       },
+      regNo: '1234',
+      accountNo: '12345678',
     };
 
     prisma.restaurants.create = jest.fn().mockResolvedValue(mockRestaurant);
@@ -310,6 +312,8 @@ describe('registerRestaurant', () => {
         x: 1.1,
         y: 1.1,
       },
+      regNo: '1234',
+      accountNo: '12345678',
     };
 
     // Act
