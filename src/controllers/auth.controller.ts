@@ -136,6 +136,8 @@ async function handleRegisterRestaurant(req: CustomRequest, res: Response) {
       return res.status(400).json({ errors: errorMessages });
     } else if (error instanceof ValidationError) {
       return res.status(400).json({ message: error.message });
+    } else if (error instanceof Error) {
+      return res.status(400).json({ message: error.message });
     }
 
     return res.status(500).json({ message: 'Internal Server Error' });

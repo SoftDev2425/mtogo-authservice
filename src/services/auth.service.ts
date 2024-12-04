@@ -56,8 +56,24 @@ async function registerRestaurant(
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    let longitude,
+      latitude = 0;
+
     // get X and Y from address
-    const { lon, lat } = await getCoordinates(address);
+    try {
+      const { lon, lat } = await getCoordinates(address);
+      longitude = lon;
+      latitude = lat;
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error);
+        throw new Error(error.message);
+      }
+
+      throw new Error(
+        'Error getting coordinates. Please provide a valid address',
+      );
+    }
 
     const restaurant = await prisma.restaurants.create({
       data: {
@@ -70,8 +86,8 @@ async function registerRestaurant(
             city: address.city,
             street: address.street,
             zip: address.zip,
-            x: lon,
-            y: lat,
+            x: longitude || 0,
+            y: latitude || 0,
           },
         },
         regNo,
