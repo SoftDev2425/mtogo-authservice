@@ -170,7 +170,7 @@ async function restaurantLogin(
     rememberMe,
     restaurant.role,
   );
-  return sessionTokenData;
+  return { sessionTokenData, restaurantId: restaurant.id };
 }
 
 async function managementLogin(

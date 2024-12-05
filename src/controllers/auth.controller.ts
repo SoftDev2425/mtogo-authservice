@@ -198,20 +198,20 @@ async function handleRestaurantLogin(req: CustomRequest, res: Response) {
     }
 
     loginSchema.parse({ email, password });
-
-    const { sessionToken, sessionTokenExpiry } = await restaurantLogin(
+    //sessionToken, sessionTokenExpiry
+    const { sessionTokenData, restaurantId } = await restaurantLogin(
       email,
       password,
       rememberMe,
     );
 
     // Return the token to the customer via a cookie
-    res.cookie(`session`, sessionToken, {
-      maxAge: sessionTokenExpiry * 1000,
+    res.cookie(`session`, sessionTokenData.sessionToken, {
+      maxAge: sessionTokenData.sessionTokenExpiry * 1000,
       httpOnly: true,
     });
 
-    return res.status(200).json({ message: 'Login successful!' });
+    return res.status(200).json({ message: 'Login successful!', restaurantId });
   } catch (error) {
     // type guard to narrow the type of `error`
     if (error instanceof ZodError) {

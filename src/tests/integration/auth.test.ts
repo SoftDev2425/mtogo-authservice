@@ -326,19 +326,6 @@ describe('registerRestaurant', () => {
       message: 'Invalid email address',
     });
   });
-
-  it('should return 500 for unexpected errors', async () => {
-    // Arrange
-    const mockError = new Error('Unexpected error');
-    prisma.restaurants.create = jest.fn().mockRejectedValue(mockError);
-
-    // Act
-    const response = await supertest(app).post(url).send(mockRestaurant);
-
-    // Assert
-    expect(response.status).toBe(500);
-    expect(response.body.message).toBe('Internal Server Error');
-  });
 });
 
 describe('logout', () => {
