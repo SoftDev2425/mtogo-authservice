@@ -23,9 +23,22 @@ function routes(app: Express) {
       try {
         const { customerId, restaurantId } = req.query;
 
+        // Ensure customer id is correct format
+        if (!customerId || typeof customerId !== 'string') {
+          return res
+            .status(400)
+            .json({ error: 'Invalid or missing customerId' });
+        }
+        // Ensure restaurant id is correct format
+        if (!restaurantId || typeof restaurantId !== 'string') {
+          return res
+            .status(400)
+            .json({ error: 'Invalid or missing restaurantId' });
+        }
+
         const data = await handleGetCustomerAndRestaurantData(
-          customerId as string,
-          restaurantId as string,
+          customerId,
+          restaurantId,
         );
 
         res.status(200).json(data);
@@ -46,26 +59,26 @@ function routes(app: Express) {
     const { method, originalUrl, ip } = req;
 
     if (err instanceof Error) {
-      logger.error(`Error: ${err.message}`, {
+      // Ensures sensitive details are not exposed in production
+      const sanitizedMessage =
+        process.env.NODE_ENV === 'production'
+          ? 'An internal error occurred'
+          : err.message;
+
+      logger.error(`Error: ${sanitizedMessage}`, {
         method,
         url: originalUrl,
         ip,
-        stack: err.stack,
+        ...(process.env.NODE_ENV !== 'production' && { stack: err.stack }),
       });
+
       res.status(500).send('Internal Server Error');
-    } else {
-      logger.error('An unknown error occurred', {
-        method,
-        url: originalUrl,
-        ip,
-      });
-      res.status(500).send('An unknown error occurred');
     }
   });
 
-  // Catch unregistered routes
-  app.all('*', (req: Request, res: Response) => {
-    res.status(404).json({ error: `Route ${req.originalUrl} not found` });
+  // Catch-all for unregistered routes, creates an error for the requested route and passes it to the error handler.
+  app.all('*', (req: Request, _res: Response, next: NextFunction) => {
+    next(new Error(`Route ${req.originalUrl} not found`));
   });
 }
 
