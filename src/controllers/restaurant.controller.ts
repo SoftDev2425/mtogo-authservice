@@ -1,11 +1,11 @@
 import { Response } from 'express';
-import { CustomRequest } from '../types/CustomRequest';
 import {
   getRestaurantData,
   getRestaurants,
 } from '../services/restaurant.service';
+import { Request } from 'express';
 
-async function handleGetRestaurantData(req: CustomRequest, res: Response) {
+async function handleGetRestaurantData(req: Request, res: Response) {
   try {
     const { restaurantId } = req.params;
     const restaurant = await getRestaurantData(restaurantId);
@@ -23,7 +23,7 @@ async function handleGetRestaurantData(req: CustomRequest, res: Response) {
   }
 }
 
-async function handleGetRestaurants(req: CustomRequest, res: Response) {
+async function handleGetRestaurants(req: Request, res: Response) {
   try {
     const { zip } = req.params;
     const restaurants = await getRestaurants(zip);

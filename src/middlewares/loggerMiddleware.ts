@@ -9,8 +9,10 @@ const logRequestDetails = (
 ) => {
   const { method, originalUrl, ip } = req;
   const userAgent = req.get('User-Agent') || 'Unknown';
+  const correlationId = req.correlationId;
 
   logger.info(`Incoming Request`, {
+    correlationId,
     method,
     url: originalUrl,
     ip,

@@ -1,11 +1,10 @@
-import express, { Response } from 'express';
+import express, { Request, Response } from 'express';
 import authController from '../controllers/auth.controller';
-import { CustomRequest } from '../types/CustomRequest';
 import { validateSession } from '../middlewares/sessions';
 
 const router = express.Router();
 
-router.get('/', (_req: CustomRequest, res: Response) =>
+router.get('/', (_req: Request, res: Response) =>
   res.send(`Hello from MTOGO: Auth Service!`),
 );
 
