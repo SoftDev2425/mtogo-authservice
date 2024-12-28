@@ -1,9 +1,9 @@
 import { Response, NextFunction } from 'express';
 import { redisClient } from '../redis/client';
-import { CustomRequest } from '@/types/CustomRequest';
+import { Request } from 'express';
 
 export const validateSession = async (
-  req: CustomRequest,
+  req: Request,
   res: Response,
   next: NextFunction,
 ) => {

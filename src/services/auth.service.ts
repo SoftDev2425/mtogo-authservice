@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import { redisClient } from '../redis/client';
 import { Prisma } from '@prisma/client';
 import { getCoordinates } from '../utils/getCoordinates';
+import { logger } from '../utils/logger';
 
 const MAX_SESSIONS = 3;
 
@@ -129,10 +130,12 @@ async function customerLogin(
   email: string,
   password: string,
   rememberMe: boolean,
+  correlationId: string,
 ) {
   const customer = await prisma.customers.findUnique({ where: { email } });
 
   if (!customer) {
+    logger.warn('Invalid credentials', { correlationId, email });
     throw new Error('Invalid credentials');
   }
 

@@ -1,4 +1,4 @@
-import { CustomRequest } from '../types/CustomRequest';
+import { Request } from 'express';
 import { loginSchema } from '../validations/loginSchema';
 import { Response } from 'express';
 import { ZodError } from 'zod';
@@ -14,8 +14,9 @@ import {
 } from '../services/auth.service';
 import { registerRestaurantSchema } from '../validations/registerRestaurantSchema';
 import { ValidationError } from '../errors/CustomErrors';
+import { logger } from '../utils/logger';
 
-async function handleRegisterCustomer(req: CustomRequest, res: Response) {
+async function handleRegisterCustomer(req: Request, res: Response) {
   try {
     const { firstName, lastName, phone, email, password } = req.body;
 
@@ -75,7 +76,7 @@ async function handleRegisterCustomer(req: CustomRequest, res: Response) {
   }
 }
 
-async function handleRegisterRestaurant(req: CustomRequest, res: Response) {
+async function handleRegisterRestaurant(req: Request, res: Response) {
   try {
     const { name, email, phone, password, address, regNo, accountNo } =
       req.body;
@@ -144,9 +145,10 @@ async function handleRegisterRestaurant(req: CustomRequest, res: Response) {
   }
 }
 
-async function handleCustomerLogin(req: CustomRequest, res: Response) {
+async function handleCustomerLogin(req: Request, res: Response) {
   try {
     const { email, password, rememberMe } = req.body;
+    const correlationId = req.correlationId;
 
     if (!email || !password) {
       return res
@@ -160,6 +162,7 @@ async function handleCustomerLogin(req: CustomRequest, res: Response) {
       email,
       password,
       rememberMe,
+      correlationId,
     );
 
     // Return the token to the customer via a cookie
@@ -176,6 +179,11 @@ async function handleCustomerLogin(req: CustomRequest, res: Response) {
         field: err.path.join('.'),
         message: err.message,
       }));
+      const correlationId = req.correlationId;
+      logger.warn('Error during customer login', {
+        correlationId,
+        errorMessages,
+      });
       return res.status(400).json({ errors: errorMessages });
     } else if (error instanceof Error) {
       // Handle general errors with a clear error message
@@ -187,7 +195,7 @@ async function handleCustomerLogin(req: CustomRequest, res: Response) {
   }
 }
 
-async function handleRestaurantLogin(req: CustomRequest, res: Response) {
+async function handleRestaurantLogin(req: Request, res: Response) {
   try {
     const { email, password, rememberMe } = req.body;
 
@@ -219,6 +227,7 @@ async function handleRestaurantLogin(req: CustomRequest, res: Response) {
         field: err.path.join('.'),
         message: err.message,
       }));
+      logger.warn('Error during restaurant login', { errorMessages });
       return res.status(400).json({ errors: errorMessages });
     } else if (error instanceof Error) {
       // Handle general errors with a clear error message
@@ -230,7 +239,7 @@ async function handleRestaurantLogin(req: CustomRequest, res: Response) {
   }
 }
 
-async function handleManagementLogin(req: CustomRequest, res: Response) {
+async function handleManagementLogin(req: Request, res: Response) {
   try {
     const { email, password, rememberMe } = req.body;
 
@@ -278,7 +287,7 @@ function sendErrorResponse(res: Response, status: number, message: string) {
   return res.status(status).json({ message });
 }
 
-async function handleLogout(req: CustomRequest, res: Response) {
+async function handleLogout(req: Request, res: Response) {
   try {
     const sessionToken = req.cookies?.session;
 
