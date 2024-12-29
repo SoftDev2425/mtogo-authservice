@@ -13,6 +13,13 @@ function routes(app: Express) {
     res.sendStatus(200),
   );
 
+  app.get('/cpu-intensive', (_req, res) => {
+    const now = Date.now();
+    // eslint-disable-next-line no-empty
+    while (Date.now() - now < 5000) {} // Simulates 5 seconds of CPU load
+    res.send('CPU-intensive task completed');
+  });
+
   app.use('/api/auth', AuthRouter);
 
   app.use('/api/restaurants', RestarantRouter);
