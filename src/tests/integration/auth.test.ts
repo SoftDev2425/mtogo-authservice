@@ -9,6 +9,8 @@ import { app } from '../setup/setup';
 import { validate as uuidValidate } from 'uuid';
 import prisma from '../../../prisma/client';
 import { Restaurant } from '../../models/restaurant';
+import { Customer } from '../../models/customer';
+import { faker } from '@faker-js/faker';
 import { getCoordinates } from '../../utils/getCoordinates';
 jest.mock('../../utils/getCoordinates');
 
@@ -326,6 +328,143 @@ describe('registerRestaurant', () => {
       message: 'Invalid email address',
     });
   });
+
+  // Boundary test for restaurant phone length
+  it('should reject restaurant with phone length 9', async () => {
+    // Arrange
+    mockRestaurant.phone = faker.string.numeric(9);
+
+    // Act
+    const response = await supertest(app).post(url).send(mockRestaurant);
+
+    // Assert
+    expect(response.status).toBe(400);
+  });
+
+  it('should register restaurant with phone length 10', async () => {
+    // Arrange
+    mockRestaurant.phone = faker.string.numeric(10);
+
+    // Act
+    const response = await supertest(app).post(url).send(mockRestaurant);
+
+    // Assert
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe('Restaurant registered successfully');
+  });
+
+  it('should register restaurant with phone length 15', async () => {
+    // Arrange
+    mockRestaurant.phone = faker.string.numeric(15);
+
+    // Act
+    const response = await supertest(app).post(url).send(mockRestaurant);
+
+    // Assert
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe('Restaurant registered successfully');
+  });
+
+  it('should reject restaurant with phone length 16', async () => {
+    // Arrange
+    mockRestaurant.phone = faker.string.numeric(16);
+
+    // Act
+    const response = await supertest(app).post(url).send(mockRestaurant);
+
+    // Assert
+    expect(response.status).toBe(400);
+  });
+
+  // Equivalence Class Partitioning for restaurant passwords
+  it('should register restaurant with valid password', async () => {
+    // Arrange
+    mockRestaurant.password = 'Password1!';
+
+    // Act
+    const response = await supertest(app).post(url).send(mockRestaurant);
+
+    // Assert
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe('Restaurant registered successfully');
+  });
+
+  it('should reject restaurant with too short password', async () => {
+    // Arrange
+    mockRestaurant.password = 'Pa1!';
+
+    // Act
+    const response = await supertest(app).post(url).send(mockRestaurant);
+
+    // Assert
+    expect(response.status).toBe(400);
+  });
+
+  it('should reject restaurant with no uppercase letter', async () => {
+    // Arrange
+    mockRestaurant.password = 'password1!';
+
+    // Act
+    const response = await supertest(app).post(url).send(mockRestaurant);
+
+    // Assert
+    expect(response.status).toBe(400);
+  });
+
+  it('should reject restaurant with no lowercase letter', async () => {
+    // Arrange
+    mockRestaurant.password = 'PASSWORD1!';
+
+    // Act
+    const response = await supertest(app).post(url).send(mockRestaurant);
+
+    // Assert
+    expect(response.status).toBe(400);
+  });
+
+  it('should reject restaurant with no number', async () => {
+    // Arrange
+    mockRestaurant.password = 'Password!';
+
+    // Act
+    const response = await supertest(app).post(url).send(mockRestaurant);
+
+    // Assert
+    expect(response.status).toBe(400);
+  });
+
+  it('should reject restaurant with no special character', async () => {
+    // Arrange
+    mockRestaurant.password = 'Password1';
+
+    // Act
+    const response = await supertest(app).post(url).send(mockRestaurant);
+
+    // Assert
+    expect(response.status).toBe(400);
+  });
+
+  it('should reject restaurant with invalid character', async () => {
+    // Arrange
+    mockRestaurant.password = 'Password1<';
+
+    // Act
+    const response = await supertest(app).post(url).send(mockRestaurant);
+
+    // Assert
+    expect(response.status).toBe(400);
+  });
+
+  it('should reject restaurant with empty string', async () => {
+    // Arrange
+    mockRestaurant.password = '';
+
+    // Act
+    const response = await supertest(app).post(url).send(mockRestaurant);
+
+    // Assert
+    expect(response.status).toBe(400);
+  });
 });
 
 describe('logout', () => {
@@ -376,5 +515,220 @@ describe('logout', () => {
     expect(invalidTokenResponse.body.message).toBe(
       'Invalid or expired session token',
     );
+  });
+});
+
+describe('registerCustomer', () => {
+  const url = '/api/auth/register/customer';
+  let mockCustomer: Customer;
+
+  beforeEach(async () => {
+    jest.clearAllMocks();
+    const mockCoordinates = { lat: 1.1, lon: 1.1 };
+    (getCoordinates as jest.Mock).mockResolvedValue(mockCoordinates);
+
+    mockCustomer = {
+      firstName: 'John',
+      lastName: 'Doe',
+      phone: '+4523456789',
+      email: 'johndoe@example.com',
+      password: 'Validated1!',
+    };
+
+    prisma.customers.create = jest.fn().mockResolvedValue(mockCustomer);
+  });
+
+  // Boundary Test Cases
+  it('should reject customer with empty first name', async () => {
+    // Arrange
+    mockCustomer.firstName = '';
+
+    // Act
+    const response = await supertest(app).post(url).send(mockCustomer);
+
+    // Assert
+    expect(response.status).toBe(400);
+    expect(response.body.errors).toContainEqual({
+      field: 'firstName',
+      message: 'firstName is required',
+    });
+  });
+
+  it('should register customer with first name length 1', async () => {
+    // Arrange
+    mockCustomer.firstName = 'A';
+
+    // Act
+    const response = await supertest(app).post(url).send(mockCustomer);
+
+    // Assert
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe('Customer registered successfully');
+  });
+
+  it('should reject customer with empty last name', async () => {
+    // Arrange
+    mockCustomer.lastName = '';
+
+    // Act
+    const response = await supertest(app).post(url).send(mockCustomer);
+
+    // Assert
+    expect(response.status).toBe(400);
+    expect(response.body.errors).toContainEqual({
+      field: 'lastName',
+      message: 'lastName is required',
+    });
+  });
+
+  it('should register customer with last name length 1', async () => {
+    // Arrange
+    mockCustomer.lastName = 'A';
+
+    // Act
+    const response = await supertest(app).post(url).send(mockCustomer);
+
+    // Assert
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe('Customer registered successfully');
+  });
+
+  it('should reject customer with phone number length 7', async () => {
+    // Arrange
+    mockCustomer.phone = '+45234567';
+
+    // Act
+    const response = await supertest(app).post(url).send(mockCustomer);
+
+    // Assert
+    expect(response.status).toBe(400);
+    expect(response.body.errors).toContainEqual({
+      field: 'phone',
+      message: 'Please enter a valid phone number',
+    });
+  });
+
+  it('should register customer with phone number length 8', async () => {
+    // Arrange
+    mockCustomer.phone = '+4523456789';
+
+    // Act
+    const response = await supertest(app).post(url).send(mockCustomer);
+
+    // Assert
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe('Customer registered successfully');
+  });
+
+  it('should reject customer with phone number length 9', async () => {
+    // Arrange
+    mockCustomer.phone = '+45234567890';
+
+    // Act
+    const response = await supertest(app).post(url).send(mockCustomer);
+
+    // Assert
+    expect(response.status).toBe(400);
+    expect(response.body.errors).toContainEqual({
+      field: 'phone',
+      message: 'Please enter a valid phone number',
+    });
+  });
+
+  it('should reject customer with email missing @ character', async () => {
+    // Arrange
+    mockCustomer.email = 'testexample.com';
+
+    // Act
+    const response = await supertest(app).post(url).send(mockCustomer);
+
+    // Assert
+    expect(response.status).toBe(400);
+    expect(response.body.errors).toContainEqual({
+      field: 'email',
+      message: 'Please enter a valid email address',
+    });
+  });
+
+  it('should reject customer with missing email domain', async () => {
+    // Arrange
+    mockCustomer.email = 'test@example';
+
+    // Act
+    const response = await supertest(app).post(url).send(mockCustomer);
+
+    // Assert
+    expect(response.status).toBe(400);
+    expect(response.body.errors).toContainEqual({
+      field: 'email',
+      message: 'Please enter a valid email address',
+    });
+  });
+
+  it('should register customer with valid email', async () => {
+    // Arrange
+    mockCustomer.email = 'test@example.com';
+
+    // Act
+    const response = await supertest(app).post(url).send(mockCustomer);
+
+    // Assert
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe('Customer registered successfully');
+  });
+
+  it('should reject customer with password length 7', async () => {
+    // Arrange
+    mockCustomer.password = 'Abcde1!';
+
+    // Act
+    const response = await supertest(app).post(url).send(mockCustomer);
+
+    // Assert
+    expect(response.status).toBe(400);
+    expect(response.body.errors).toContainEqual({
+      field: 'password',
+      message: 'Password must be at least 8 characters',
+    });
+  });
+
+  it('should register customer with password length 8', async () => {
+    // Arrange
+    mockCustomer.password = 'Abcdef1!';
+
+    // Act
+    const response = await supertest(app).post(url).send(mockCustomer);
+
+    // Assert
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe('Customer registered successfully');
+  });
+
+  // Equivalence Partition Test Cases
+  it('should register customer with valid phone number without country code', async () => {
+    // Arrange
+    mockCustomer.phone = '22334455';
+
+    // Act
+    const response = await supertest(app).post(url).send(mockCustomer);
+
+    // Assert
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe('Customer registered successfully');
+  });
+
+  it('should reject customer with phone number containing non-numeric characters', async () => {
+    // Arrange
+    mockCustomer.phone = 'abc12345';
+
+    // Act
+    const response = await supertest(app).post(url).send(mockCustomer);
+
+    // Assert
+    expect(response.status).toBe(400);
+    expect(response.body.errors).toContainEqual({
+      field: 'phone',
+      message: 'Please enter a valid phone number',
+    });
   });
 });

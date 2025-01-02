@@ -1,6 +1,5 @@
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { loginSchema } from '../validations/loginSchema';
-import { Response } from 'express';
 import { ZodError } from 'zod';
 import { registerCustomerSchema } from '../validations/registerCustomerSchema';
 import { validateRequiredFields } from '../utils/validateRequiredFields';
